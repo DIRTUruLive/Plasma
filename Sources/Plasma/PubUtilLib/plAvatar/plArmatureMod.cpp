@@ -123,6 +123,9 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #include "plTweak.h"
 #include "plDrawable/plVisLOSMgr.h"
 
+//Cleft Chronicle Variable for Panic Linking
+#define kCleftSolved                    L"CleftSolved"
+
 int plArmatureModBase::fMinLOD = 0;     // standard is 3 levels of LOD
 double plArmatureModBase::fLODDistance = 50.0;
 
@@ -997,6 +1000,7 @@ void plArmatureMod::LeaveAge()
 
 void plArmatureMod::PanicLink(bool playLinkOutAnim /* = true */)
 {
+    bool cleftSolved = VaultHasChronicleEntry( kCleftSolved );
     // console override... just go back to the beginning
     if (fDontPanicLink)
     {
@@ -1009,33 +1013,41 @@ void plArmatureMod::PanicLink(bool playLinkOutAnim /* = true */)
     fAlreadyPanicLinking = true;
 
 
-    plNetApp::StaticDebugMsg("plArmatureMod::PanicLink()");
-
-    // make the player book blink as they are linking out
-    pfKIMsg *msg = new pfKIMsg( pfKIMsg::kStartBookAlert );
-    plgDispatch::MsgSend( msg );
-
-    // Can't depend on the anim to link if the human brain isn't ready to deal with it
-    plAvBrainHuman *brain = plAvBrainHuman::ConvertNoRef(GetCurrentBrain());
-    // If things break then uncomment the code below
-    if (!brain)//  || brain->IsRunningTask())
-        playLinkOutAnim = false;
-
-    if (playLinkOutAnim)
+    if ( cleftSolved )
     {
-        plAvOneShotLinkTask *task = new plAvOneShotLinkTask;
+        plNetApp::StaticDebugMsg("plArmatureMod::PanicLink()");
 
-        plString animName = MakeAnimationName("FallingLinkOut");
-        task->SetAnimName(animName);
-        task->SetMarkerName("touch");
+        // make the player book blink as they are linking out
+        pfKIMsg *msg = new pfKIMsg( pfKIMsg::kStartBookAlert );
+        plgDispatch::MsgSend( msg );
+
+        // Can't depend on the anim to link if the human brain isn't ready to deal with it
+        plAvBrainHuman *brain = plAvBrainHuman::ConvertNoRef(GetCurrentBrain());
+        // If things break then uncomment the code below
+        if (!brain)//  || brain->IsRunningTask())
+            playLinkOutAnim = false;
+
+        if (playLinkOutAnim)
+        {
+            plAvOneShotLinkTask *task = new plAvOneShotLinkTask;
+
+            plString animName = MakeAnimationName("FallingLinkOut");
+            task->SetAnimName(animName);
+            task->SetMarkerName("touch");
     
-        plAvTaskMsg *taskMsg = new plAvTaskMsg(GetKey(), GetKey(), task);
-        taskMsg->Send();
+            plAvTaskMsg *taskMsg = new plAvTaskMsg(GetKey(), GetKey(), task);
+            taskMsg->Send();
+        }
+        else
+        {
+            EnablePhysics(false, plArmatureMod::kDisableReasonLinking);
+            ILinkToPersonalAge();
+        }
     }
     else
     {
         EnablePhysics(false, plArmatureMod::kDisableReasonLinking);
-        ILinkToPersonalAge();
+        ILinkToDniHouse();
     }
 }   
 
@@ -1546,6 +1558,25 @@ void plArmatureMod::ILinkToPersonalAge()
     pMsg->SetLinkInAnimName("PersonalBookEnter");
     pMsg->AddReceiver(nc->GetKey());
     pMsg->Send();   
+}
+
+void plArmatureMod::ILinkToDniHouse()
+{
+    plNetClientMgr * nc = plNetClientMgr::GetInstance();
+
+    plAgeLinkStruct link;
+    link.GetAgeInfo()->SetAgeFilename( kDniHouseAgeFilename );
+    link.GetAgeInfo()->SetAgeInstanceName( kDniHouseAgeInstanceName );
+
+    plSpawnPointInfo courtyardSpawnPoint;
+    courtyardSpawnPoint.SetName(kDniHouseAgeLinkInPointCourtyard);
+    link.SetSpawnPoint(courtyardSpawnPoint);
+
+    link.SetLinkingRules( plNetCommon::LinkingRules::kOriginalBook );
+    plLinkToAgeMsg* pMsg = new plLinkToAgeMsg( &link );
+    pMsg->SetLinkInAnimName("GroundImpact");
+    pMsg->AddReceiver(nc->GetKey());
+    pMsg->Send();
 }
 
 bool plArmatureMod::IEval(double time, float elapsed, uint32_t dirty)

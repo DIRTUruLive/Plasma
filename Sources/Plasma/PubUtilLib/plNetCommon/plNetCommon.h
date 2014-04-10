@@ -85,6 +85,12 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #define kPersonalAgeInstanceNameW           L"Relto"
 #define kPersonalAgeLinkInPointCloset       "LinkInPointCloset"
 
+#define kDniHouseAgeFilename                "DniHouse"
+#define kDniHouseAgeFilenameW               L"DniHouse"
+#define kDniHouseAgeInstanceName            "D'ni - Tomahn"
+#define kDniHouseAgeInstanceNameW           L"D'ni - Tomahn"
+#define kDniHouseAgeLinkInPointCourtyard    "LinkInPointCourtyard"
+
 #define kCityFerryTerminalLinkSpawnPtName   "LinkInPointFerry"
 #define kCityFerryTerminalLinkTitle         "Ferry Terminal"
 
