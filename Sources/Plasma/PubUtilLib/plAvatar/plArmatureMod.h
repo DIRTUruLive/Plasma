@@ -386,6 +386,7 @@ protected:
     void    IFireBehaviorNotify(uint32_t type, bool behaviorStart = true);
     void    IHandleInputStateMsg(plAvatarInputStateMsg *msg);
     void    ILinkToPersonalAge();
+    void    ILinkToDniHouse();
     int     IFindSpawnOverride(void);
     void    ISetTransparentDrawOrder(bool val);
     plLayerLinkAnimation *IFindLayerLinkAnim();
