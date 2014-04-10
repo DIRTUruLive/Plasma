@@ -2532,6 +2532,15 @@ plKey   pfJournalBook::IGetMipmapKey( const wchar_t *name, const plLocation &loc
         return key;
     }
 
+    // Next let's try the Secondary "global" pre-defined stuff
+    const plLocation &dirtLoc = plKeyFinder::Instance().FindLocation( "GUI", "BkNewBookImages" );
+    myUoid = plUoid( dirtLoc, plMipmap::Index(), cName );
+    key = hsgResMgr::ResMgr()->FindKey( myUoid );
+    if( key != nil )
+    {
+        return key;
+    }
+
     // Do a search through our current age with just the name given
     if( plNetClientMgr::GetInstance() != nil )
     {
