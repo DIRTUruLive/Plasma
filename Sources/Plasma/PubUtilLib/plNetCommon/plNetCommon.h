@@ -96,6 +96,8 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #define kKirelFilenameW                     L"Neighborhood02"
 #define kKirelInstanceNameW                 L"Kirel"
 
+#define kCityLinkFromDsnt            "LinkInPointCityFerry"
+#define kDsntLinkFromCity            "LinkInPointDsntFerry"
 
 ///////////////////////////////////////////////////////////////////
 // Chronicle Var Names

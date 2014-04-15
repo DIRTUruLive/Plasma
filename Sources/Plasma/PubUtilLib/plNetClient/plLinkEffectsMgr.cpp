@@ -391,7 +391,13 @@ bool plLinkEffectsMgr::MsgReceive(plMessage *msg)
                 bool linkToDsntFromShell = lm && 
                                         lm->GetAgeLink()->HasSpawnPt() &&
                                         !lm->GetAgeLink()->SpawnPoint().GetTitle().CompareI(kDescentLinkFromShell);
-                if ( linkToACA || linkFromACA || linkToStartup || linkFromStartup || linkToFissureDrop || linkToDsntFromShell)
+                bool linkToCityFromDsnt = lm &&
+                                        lm->GetAgeLink()->HasSpawnPt() &&
+                                        !lm->GetAgeLink()->SpawnPoint().GetTitle().CompareI(kCityLinkFromDsnt);
+                bool linkToDsntFromCity = lm &&
+                                        lm->GetAgeLink()->HasSpawnPt() &&
+                                        !lm->GetAgeLink()->SpawnPoint().GetTitle().CompareI(kDsntLinkFromCity);
+                if ( linkToACA || linkFromACA || linkToStartup || linkFromStartup || linkToFissureDrop || linkToDsntFromShell || linkToCityFromDsnt || linkToDsntFromCity )
                 {
                     BCMsg->SetLinkFlag(plLinkEffectBCMsg::kMute);
                 }
