@@ -9,8 +9,6 @@ endif()
 
 # Max Stuff goes below here...
 if(3dsm_BUILD_PLUGIN)
-    add_definitions(-DMAXPLUGINCODE)
-
     add_subdirectory(MaxComponent)
     add_subdirectory(MaxConvert)
     add_subdirectory(MaxExport)
