@@ -39,27 +39,33 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
       Mead, WA   99021
 
 *==LICENSE==*/
-#ifndef HS_SAFE_REF_CNT_H
-#define HS_SAFE_REF_CNT_H
+#ifndef _plFontPreview_h
+#define _plFontPreview_h
 
-#include "hsRefCnt.h"
-#include "hsThread.h"
+#include <QFrame>
 
-//
-// Thread Safe RefCounter
-//
+class plFont;
 
-class hsSafeRefCnt : public hsRefCnt
+class plFontPreview : public QFrame
 {
-private:
-    static hsMutex fMutex;
-protected:
-    virtual void IRef() { } 
-    virtual void IUnRef() { }; 
 public:
-    virtual int RefCnt() const { hsTempMutexLock temp(fMutex); return hsRefCnt::RefCnt(); }
-    void UnRef() { hsTempMutexLock temp(fMutex); IUnRef(); hsRefCnt::UnRef(); }
-    void Ref() { hsTempMutexLock temp(fMutex); IRef(); hsRefCnt::Ref(); }
+    plFontPreview(QWidget *parent = nullptr) : QFrame(parent), fFont(nullptr) { }
+
+    void Update(plFont *font, const QString &text);
+
+protected:
+    virtual void paintEvent(QPaintEvent *event);
+
+    virtual void resizeEvent(QResizeEvent *event)
+    {
+        QFrame::resizeEvent(event);
+        Update(fFont, fText);
+    }
+
+private:
+    plFont *fFont;
+    QString fText;
+    QImage fPreview;
 };
 
-#endif //HS_SAFE_REF_CNT_H
+#endif

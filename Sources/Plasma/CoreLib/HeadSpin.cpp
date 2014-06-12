@@ -49,7 +49,7 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #pragma hdrstop
 
 #include "hsTemplates.h"
-#include "plString.h"
+#include "plFormat.h"
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ void ErrorAssert(int line, const char* file, const char* fmt, ...)
     char msg[1024];
     va_list args;
     va_start(args, fmt);
-    vsnprintf(msg, sizeof(msg), fmt, args);
+    vsnprintf(msg, arrsize(msg), fmt, args);
 #ifdef HS_DEBUGGING
     if (s_GuiAsserts)
     {
@@ -163,7 +163,7 @@ void DebugMsg(const char* fmt, ...)
     char msg[1024];
     va_list args;
     va_start(args, fmt);
-    vsnprintf(msg, sizeof(msg), fmt, args);
+    vsnprintf(msg, arrsize(msg), fmt, args);
 
     if (DebugIsDebuggerPresent())
     {
@@ -535,7 +535,7 @@ std::vector<plString> DisplaySystemVersion()
 
         if ( osvi.dwMajorVersion <= 4 )
         {
-            versionStrs.push_back(plString::Format("version %d.%d %s (Build %d)\n",
+            versionStrs.push_back(plFormat("version {}.{} {} (Build {})\n",
                 osvi.dwMajorVersion,
                 osvi.dwMinorVersion,
                 osvi.szCSDVersion,
@@ -543,7 +543,7 @@ std::vector<plString> DisplaySystemVersion()
         }
         else
         {
-            versionStrs.push_back(plString::Format("%s (Build %d)\n",
+            versionStrs.push_back(plFormat("{} (Build {})\n",
                 osvi.szCSDVersion,
                 osvi.dwBuildNumber & 0xFFFF));
         }

@@ -47,6 +47,8 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
 #include <cstdio>
 #include <cstddef>
 
+#include "plFormat.h"
+
 #if HS_BUILD_FOR_WIN32
 #   define PATH_SEPARATOR       '\\'
 #   define PATH_SEPARATOR_STR   "\\"

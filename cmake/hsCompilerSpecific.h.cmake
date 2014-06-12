@@ -39,45 +39,16 @@ You can contact Cyan Worlds, Inc. by email legal@cyan.com
       Mead, WA   99021
 
 *==LICENSE==*/
-#include "hsCodecManager.h"
-#include "plMipmap.h"
 
+#ifndef _hs_Compiler_Specific_H
+#define _hs_Compiler_Specific_H
 
-hsCodecManager& hsCodecManager::Instance()
-{
-    static hsCodecManager the_instance;
-    static bool initialized = false;
+#cmakedefine HAVE_CPUID
 
-    if (!initialized)
-    {
-        initialized = true;
-    }
+#define WCHAR_BYTES ${WCHAR_BYTES}
+#define SIZEOF_LONG ${SIZEOF_LONG}
 
-    return the_instance;
-}
+#cmakedefine HAVE_CXX14_DEPRECATED_ATTR
+#cmakedefine HAVE_GCC_DEPRECATED_ATTR
 
-hsCodecManager::hsCodecManager()
-{
-}
-
-plMipmap *hsCodecManager::CreateCompressedMipmap(uint32_t compressionFormat, plMipmap *uncompressed)
-{
-    return nil;
-}
-
-plMipmap *hsCodecManager::CreateUncompressedMipmap(plMipmap *compressed, uint8_t bitDepth)
-{
-    return nil;
-
-}
-
-bool hsCodecManager::ColorizeCompMipmap( plMipmap *bMap, const uint8_t *colorMask )
-{
-    return false;
-}
-
-bool hsCodecManager::Register(hsCodec *codec, uint32_t compressionFormat, hsScalar priority)
-{
-    return true;
-}
-
+#endif
